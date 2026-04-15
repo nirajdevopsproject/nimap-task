@@ -1,48 +1,29 @@
 pipeline {
     agent any
 
-    environment {
-        COMPOSE_PROJECT_NAME = "fastapi-devops"
-    }
-
     stages {
-
-        stage('Clone Code') {
-            steps {
-                git 'https://github.com/nirajdevopsproject/nimap-task'
-            }
-        }
 
         stage('Verify Files') {
             steps {
-                sh '''
-                echo "Listing project files..."
-                ls -la
-                '''
+                sh 'ls -la'
             }
         }
 
         stage('Stop Old Containers') {
             steps {
-                sh '''
-                docker compose down || true
-                '''
+                sh 'docker compose down || true'
             }
         }
 
         stage('Build & Deploy') {
             steps {
-                sh '''
-                docker compose up -d --build
-                '''
+                sh 'docker compose up -d --build'
             }
         }
 
-        stage('Check Running Containers') {
+        stage('Check Containers') {
             steps {
-                sh '''
-                docker ps
-                '''
+                sh 'docker ps'
             }
         }
 
@@ -58,10 +39,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment Successful!'
+            echo '✅ Deployment Successful!'
         }
         failure {
-            echo 'Deployment Failed!'
+            echo '❌ Deployment Failed!'
         }
     }
 }
